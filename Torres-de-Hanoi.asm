@@ -1,5 +1,5 @@
 .data
-	
+
 .text 
 	add $t0, $sp, -28	# begin base adress
 	# para agregar otro valor a la pila usar (adress +20h, 32D)
