@@ -1,24 +1,27 @@
-.data
-	
 .text 
-	add $t0, $sp, -28	# begin base adress
+	add $t0, $sp, -28	# primera posicion del palo A
+	add $t1, $t0, 4		# primera posicion del palo B
+	add $t2, $t1, 4		# primera posicion del palo C
 	# para agregar otro valor a la pila usar (adress +20h, 32D)
-	add $t1, $t0, 4		# aux base adress 
-	add $t2, $t1, 4		# end base adress
-	li $s0,10		# n
+	li $s0, 10		# n de discos
 MAIN:
-	jal HANOIL 		# Calling procedure
+	add $s1, $s0, $zero	# s1 is used for loading the first stack
+	jal FIRST_STACK		# Calling procedure
 	j EXIT			# Jump to Main label
+FIRST_STACK:
+	slti $t3, $s1, 1 	# if n<1, t=1 hasta que imprima todas los discos
+	beq $t3, $zero, LOAD 	# ciclo para cargar la primera columna
+	add $t4, $zero, 1	# bit para checar si el número es impar
+	and $t4, $t4, $s0	# si es par $t4 será 0, si es impar $t4 será 1
+	j MOVE			# continuar a la rutina para mover los discos
+LOAD:	
+	sw $s1, 0($t0) 		# guarda el valor del discos actual en la localidad indicada
+	addi $s1, $s1, -1 	# reducir n
+	addi $t0, $t0, 32	# mover el puntero de la primera columna a la siguiente posición
+	j FIRST_STACK		# continúa ordenando la primera columna
+MOVE:
 	
-HANOIL:	
-	slti $t3, $s0, 1 	# if n<1, t=1
-	beq $t3, $zero, MOVE 	# Branch to Loop
-	addi $v0, $zero, 1 	# Confirm end
-	jr $ra 			# Return to the caller	
-MOVE:	
-	# Check other base 
-	sw $s0, 0($t0) 		# Storing the resturn address
-	addi $s0, $s0, -1 	# Decreasing n
-	addi $t0, $t0, 32
-	j HANOIL
+	
+	
+	jr $ra 
 EXIT:
