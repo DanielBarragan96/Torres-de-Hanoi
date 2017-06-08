@@ -44,6 +44,8 @@ HANOI:	lw $s1, 0($sp)		# Guardamos valor de la columna inicial a s1
 	and $s6, $s1, 1		# Para ver si es par o non. 1 es impar
 	beq $s6, 1, RESTAR
 	jal SUMAR
+	sw $s1, 
+	j MOV
 
 COLI: 	
 	addi $t2, $t2, -0x20
@@ -51,10 +53,11 @@ COLI:
 	beq $s3, 1, UNO
 	beq $s3, 2, DOS
 	beq $s3, 3, tres
-	
+	jr  $ra
+		
 SUMAR:	addi $s3, $s3, 1
 	beq $s3, 4, CAMB
-	jal COLI
+	j COLI
 	
 RESTAR: 	beq $s3, 1, NADA
 	addi $s3, $s3, -1
@@ -66,8 +69,6 @@ UNO:	add $t5, $t5, $t0
 DOS:	add $t5, $t5, $t1
 TRES:	add $t5, $t5, $t2
 
-
-		
 MOV: 
 	sw $zero, 0($sp)
 	addi $sp, $sp, 0x20
