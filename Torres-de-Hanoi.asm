@@ -32,20 +32,32 @@ CASE4:	add $s2, $s2, -3
 CASE1:	add $t5, $t0, $zero	# primera columna A
 	add $t6, $t1, $zero	# primera columna B
 	add $t7, $t2, $zero	# primera columna C
-	# s6
-	# s5
-	j MOVE
+	sub $t2, $t2, $s5	# s5 izq
+	sub $t2, $t2, $s6	# s6 der
+	add $t1, $t1, $s5	#
+	add $t2, $t2, $s6	#
+	add $s5, $zero, $zero	# erase s5
+	add $s6, $zero, $zero	# erase s6
+	j MOVE			# keep moving
 CASE2:	add $t5, $t2, $zero	# primera columna A
 	add $t6, $t0, $zero	# primera columna B
 	add $t7, $t1, $zero	# primera columna C
-	# s6
-	# s5
-	j MOVE
+	sub $t0, $t0, $s5	# s5 izq
+	sub $t0, $t0, $s6	# s6 der
+	add $t1, $t1, $s6	#
+	add $t2, $t2, $s5	#
+	add $s5, $zero, $zero	# erase s5
+	add $s6, $zero, $zero	# erase s6
+	j MOVE			# keep moving
 CASE3:	add $t5, $t1, $zero	# primera columna A
 	add $t6, $t2, $zero	# primera columna B
 	add $t7, $t0, $zero	# primera columna C
-	# s6
-	# s5
+	sub $t1, $t1, $s5	# s5 izq
+	sub $t1, $t1, $s6	# s6 der
+	add $t0, $t0, $s5	# 
+	add $t2, $t2, $s6	# 
+	add $s5, $zero, $zero	# erase s5
+	add $s6, $zero, $zero	# erase s6
 MOVE:	
 	add $t4, $zero, 1	# bit para checar si el número es impar
 	and $s4, $t4, $s0	# si es par $s4 será 0, si es impar $t4 será 1
@@ -61,18 +73,14 @@ IZQ:
 	# checar si el valor en a es menor que C 
 	lw $s3, 0($t5)	
 	sw $zero, 0($t5)
-	add $t5, $t5, -32
 	sw $s3, 0($t7)
-	add $t7, $t7, 32
-	add $s5, $s5, 1
-	j COLI	
+	add $s5, $s5, 32
+	j MOVE	
 DER:
 	# checar si el valor en a es mayor que B
 	lw $s3, 0($t5)
 	sw $zero, 0($t5)
-	add $t5, $t5, -32
 	sw $s3, 0($t6)
-	add $t6, $t6, 32
-	add $s6, $s6, 1
-	#j COLI
+	add $s6, $s6, 32
+	j MOVE
 EXIT:
