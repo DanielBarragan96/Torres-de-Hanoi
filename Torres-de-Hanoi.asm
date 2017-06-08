@@ -1,7 +1,7 @@
 .text 
 	add $t0, $sp, -28	# primera posicion del palo A
 	# para agregar otro valor a la pila usar (adress +20h, 32D)
-	addi $s0, $zero, 8	# n de discos
+	addi $s0, $zero, 4	# n de discos
 MAIN:
 	add $s1, $zero, 1	# s1 is used for loading the first stack
 	#jal FIRST_STACK	# Calling procedure
@@ -20,6 +20,7 @@ CONTINUE:
 	add $t1, $t0, 4		# primera posicion del palo B
 	add $t2, $t1, 4		# primera posicion del palo C
 	add $t0, $sp, -28	# primera posicion del palo A
+	sub $sp, $sp, 20
 	add $s2, $zero, $zero
 	# condiciones para mover la primera ficha
 	add $t6, $t0, $zero	# 
@@ -53,30 +54,51 @@ CASE3:	add $t0, $t7, $zero	#
 	add $t5, $t1, $zero	# primera columna A
 	add $t6, $t2, $zero	# primera columna B
 	add $t7, $t0, $zero	# primera columna C
-PRE-MOVE:
 MOVE:	
+	lw $s1, 0($sp)
+	beq $s1, 1, EXIT
 	add $t4, $zero, 1	# bit para checar si el número es impar
 	and $s4, $t4, $s0	# si es par $s4 será 0, si es impar $t4 será 1
 	lw $s3, 0($t5)		# valor de la pila actual
 	and $t4, $t4, $s3	# si es par $t4 será 0, si es impar $t4 será 
-	beq $s4, $zero, PAR	# n es par
+	beq $s4, $zero, PAR	# brinca si es par
 	beq $t4, $zero, DER	# el valor en A es par
 	j IZQ			# el valor en A es impar
 PAR:
 	beq $t4, $zero, IZQ	# el valor en A es par
 	j DER			# el valor en A es impar
-IZQ:
-	# checar si el valor en a es menor que C 
-	lw $s3, 0($t5)	
+CHECKMOVE:
+	beq $a0, $zero, COLI
+	beq $a1, $zero, RET
+	sub $a0, $a1, $a0
+	srl $a0, $a0, 31
+	beq $a0, $zero, RET
+	j COLI
+RET:	jr $ra
+DER: 
+	lw $a0, 0($t5)
+	lw $a1, 0($t6)
+	jal CHECKMOVE
+	beq $a1, $zero, ZEROD #lw $s7, 0($t6)
+	add $t6, $t6, -32
+ZEROD:	lw $s7, 0($t5)
 	sw $zero, 0($t5)
-	sw $s3, 0($t7)
-	add $s5, $s5, 32
-	j PRE-MOVE	
-DER:
-	# checar si el valor en a es mayor que B
-	lw $s3, 0($t5)
+	sw $s7, 0($t6)
+	#lw $s7, 0($t5)
+	#beq $s7, $zero, MOVE
+	add $t5, $t5, 32
+	j MOVE 	
+IZQ: 
+	lw $a0, 0($t5)
+	lw $a1, 0($t7)
+	jal CHECKMOVE
+	beq $a1, $zero, ZEROI
+	add $t7, $t7, -32
+ZEROI:	lw $s7, 0($t5)
 	sw $zero, 0($t5)
-	sw $s3, 0($t6)
-	add $s6, $s6, 32
-	j PRE-MOVE
+	sw $s7, 0($t7)
+	#lw $s7, 0($t5)
+	#beq $s7, $zero, MOVE
+	add $t5, $t5, 32
+	j MOVE 	
 EXIT:
