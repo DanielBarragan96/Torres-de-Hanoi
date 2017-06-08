@@ -1,13 +1,10 @@
 .text 
 	add $t0, $sp, -28	# primera posicion del palo A
 	# para agregar otro valor a la pila usar (adress +20h, 32D)
-	addi $s0, $zero, 2	# n de discos
+	addi $s0, $zero, 4	# n de discos
 MAIN:
 	add $s1, $zero, 1	# s1 is used for loading the first stack
-	#jal FIRST_STACK	# Calling procedure
-	#j EXIT			# Jump to Main label
 FIRST_STACK:
-	#slti $t3, $s1, $s0 	# if n<1, t=1 hasta que imprima todas los discos
 	bne $s1, $s0, LOAD 	# ciclo para cargar la primera columna
 	sw $s1, 0($t0) 		# guarda el valor del discos actual en la localidad indicada
 	j CONTINUE		# continuar a la rutina para mover los discos
@@ -101,5 +98,8 @@ ZEROI:	lw $s7, 0($t5)		# se carga el valor de la ficha a mover
 	#lw $s7, 0($t5)
 	#beq $s7, $zero, MOVE
 	add $t5, $t5, 32	# se mueve la dirección de origen
+	lw $a2, 0($t5)		# se carga el valor de t5
+	bne $a2, $zero, MOVE	# si el valor no es cero aún hay fichas por lo que seguimos con MOVE
+	sub $t5, $t5, 32	# si fue cero, le restamos 32 a t5 para quedar en la posición inicial
 	j MOVE 			# regresa a MOVE
 EXIT:
