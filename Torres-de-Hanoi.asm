@@ -59,12 +59,12 @@ MOVE:
 	addi $t4, $zero, 1	# bit para checar si el número es impar
 	and $s4, $t4, $s0	# si es par $s4 será 0, si es impar $t4 será 1
 	and $t4, $t4, $s3	# si es par $t4 será 0, si es impar $t4 será 
-	beq $s4, $zero, PAR	# brinca si es par
+	#beq $s4, $zero, PAR	# brinca si es par
 	beq $t4, $zero, DER	# el valor en A es par
 	j IZQ			# el valor en A es impar
-PAR:
-	beq $t4, $zero, IZQ	# el valor en A es par
-	j DER			# el valor en A es impar
+#PAR:	#si quisiera optimizarse para fichas pares, debería de cambiarse COLI
+	#beq $t4, $zero, IZQ	# el valor en A es par
+	#j DER			# el valor en A es impar
 CHECKMOVE:
 	beq $a0, $zero, COLI	# si tu valor en la columna es cero pasa a la siguiente
 	beq $a1, $zero, RET	# si vas a mover a una posicion con valor cero regresar a hacerlo
@@ -82,8 +82,6 @@ DER:
 ZEROD:	lw $s7, 0($t5)		# se carga el valor de la ficha a mover
 	sw $zero, 0($t5)	# se borra el valor de la ficha a mover	
 	sw $s7, 0($t6)		# se escribe el valor de la ficha a mover
-	#lw $s7, 0($t5)
-	#beq $s7, $zero, MOVE
 	addi $t5, $t5, 32	# se mueve la dirección de origen
 	lw $a2, 0($t5)		# se carga el valor de t5
 	bne $a2, $zero, MOVE	# si el valor no es cero aún hay fichas por lo que seguimos con MOVE
@@ -98,8 +96,6 @@ IZQ:
 ZEROI:	lw $s7, 0($t5)		# se carga el valor de la ficha a mover
 	sw $zero, 0($t5)	# se borra el valor de la ficha a mover
 	sw $s7, 0($t7)		# se escribe el valor de la ficha a mover
-	#lw $s7, 0($t5)
-	#beq $s7, $zero, MOVE
 	addi $t5, $t5, 32	# se mueve la dirección de origen
 	lw $a2, 0($t5)		# se carga el valor de t5
 	bne $a2, $zero, MOVE	# si el valor no es cero aún hay fichas por lo que seguimos con MOVE
