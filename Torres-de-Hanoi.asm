@@ -29,7 +29,7 @@ COLI:
 	beq $s2, 1, CASE1	# si i = 1
 	beq $s2, 2, CASE2	# si i = 2
 	beq $s2, 3, CASE3	# si i = 3
-	j EXIT
+	j EXIT			# en caso de error termina
 CASE4:	add $s2, $s2, -3	# si fue 4 se resetea a 1
 CASE1:	add $t0, $t6, $zero	# actualiza valor de columna A
 	add $t1, $t7, $zero	# actualiza valor de columna B
