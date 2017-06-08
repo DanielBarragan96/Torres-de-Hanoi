@@ -21,6 +21,10 @@ CONTINUE:
 	add $t2, $t1, 4		# primera posicion del palo C
 	add $t0, $sp, -28	# primera posicion del palo A
 	add $s2, $zero, $zero
+	# condiciones para mover la primera ficha
+	add $t6, $t0, $zero	# 
+	add $t7, $t1, $zero	# 
+	add $t5, $t2, $zero	# 
 COLI: 
 	add $s2, $s2, 1
 	beq $s2, 4, CASE4
@@ -29,35 +33,27 @@ COLI:
 	beq $s2, 3, CASE3
 	j EXIT
 CASE4:	add $s2, $s2, -3
-CASE1:	add $t5, $t0, $zero	# primera columna A
+CASE1:	add $t0, $t6, $zero	# 
+	add $t1, $t7, $zero	# 
+	add $t2, $t5, $zero	# 
+	add $t5, $t0, $zero	# primera columna A
 	add $t6, $t1, $zero	# primera columna B
 	add $t7, $t2, $zero	# primera columna C
-	sub $t2, $t2, $s5	# s5 izq
-	sub $t2, $t2, $s6	# s6 der
-	add $t1, $t1, $s5	#
-	add $t2, $t2, $s6	#
-	add $s5, $zero, $zero	# erase s5
-	add $s6, $zero, $zero	# erase s6
 	j MOVE			# keep moving
-CASE2:	add $t5, $t2, $zero	# primera columna A
+CASE2:	add $t0, $t5, $zero	# 
+	add $t1, $t6, $zero	# 
+	add $t2, $t7, $zero	# 
+	add $t5, $t2, $zero	# primera columna A
 	add $t6, $t0, $zero	# primera columna B
 	add $t7, $t1, $zero	# primera columna C
-	sub $t0, $t0, $s5	# s5 izq
-	sub $t0, $t0, $s6	# s6 der
-	add $t1, $t1, $s6	#
-	add $t2, $t2, $s5	#
-	add $s5, $zero, $zero	# erase s5
-	add $s6, $zero, $zero	# erase s6
 	j MOVE			# keep moving
-CASE3:	add $t5, $t1, $zero	# primera columna A
+CASE3:	add $t0, $t7, $zero	# 
+	add $t1, $t5, $zero	# 
+	add $t2, $t6, $zero	# 
+	add $t5, $t1, $zero	# primera columna A
 	add $t6, $t2, $zero	# primera columna B
 	add $t7, $t0, $zero	# primera columna C
-	sub $t1, $t1, $s5	# s5 izq
-	sub $t1, $t1, $s6	# s6 der
-	add $t0, $t0, $s5	# 
-	add $t2, $t2, $s6	# 
-	add $s5, $zero, $zero	# erase s5
-	add $s6, $zero, $zero	# erase s6
+PRE-MOVE:
 MOVE:	
 	add $t4, $zero, 1	# bit para checar si el número es impar
 	and $s4, $t4, $s0	# si es par $s4 será 0, si es impar $t4 será 1
@@ -75,12 +71,12 @@ IZQ:
 	sw $zero, 0($t5)
 	sw $s3, 0($t7)
 	add $s5, $s5, 32
-	j MOVE	
+	j PRE-MOVE	
 DER:
 	# checar si el valor en a es mayor que B
 	lw $s3, 0($t5)
 	sw $zero, 0($t5)
 	sw $s3, 0($t6)
 	add $s6, $s6, 32
-	j MOVE
+	j PRE-MOVE
 EXIT:
