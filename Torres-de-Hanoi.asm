@@ -1,7 +1,9 @@
+# Daniel Barragán Alvarez ie702554
+# Sergio Chung Correa ie702272
 .text 
 	addi $t0, $sp, -28	# primera posicion del palo A
 	# para agregar otro valor a la pila usar (adress +20h, 32D)
-	addi $s0, $zero, 4	# n de discos
+	addi $s0, $zero, 8	# n de discos
 MAIN:
 	addi $s1, $zero, 1	# s1 is used for loading the first stack
 FIRST_STACK:
